@@ -5,6 +5,7 @@
     book: Handlebars.compile(document.querySelector('#template-book').innerHTML),
   };
 
+  const favoriteBooks = [];
 
   function renderBooks() {
     console.log(dataSource.books);
@@ -23,5 +24,26 @@
     } 
   }
 
+  function initActions() {
+    const bookImgs = document.querySelectorAll('.book__image');
+    console.log(bookImgs);
+
+    for (let singleBook of bookImgs) {
+      const singleDataID = singleBook.getAttribute('data-id');
+      console.log(singleBook);   
+      singleBook.addEventListener('dblclick', function() {
+        singleBook.classList.add('favorite');
+        favoriteBooks.push(singleDataID);
+        console.log(favoriteBooks);
+      });
+    }
+
+  }
+
+
   renderBooks();
+
+  initActions();
+
+
 }
