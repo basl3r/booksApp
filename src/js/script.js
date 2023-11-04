@@ -29,12 +29,31 @@
     console.log(bookImgs);
 
     for (let singleBook of bookImgs) {
-      const singleDataID = singleBook.getAttribute('data-id');
+
+      const singleBookDataId = singleBook.getAttribute('data-id');
       console.log(singleBook);   
+
       singleBook.addEventListener('dblclick', function() {
-        singleBook.classList.add('favorite');
-        favoriteBooks.push(singleDataID);
-        console.log(favoriteBooks);
+
+        if (singleBook.className !== 'book__image favorite') {
+
+          console.log(singleBook.className);
+
+          singleBook.classList.add('favorite');
+
+          favoriteBooks.push(singleBookDataId);
+
+          console.log(favoriteBooks);
+        } else {
+
+          let indexOf = favoriteBooks.indexOf(singleBookDataId);
+
+          singleBook.classList.remove('favorite');
+
+          favoriteBooks.splice(indexOf, 1);
+
+        }
+
       });
     }
 
