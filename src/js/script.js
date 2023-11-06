@@ -7,13 +7,23 @@
 
   const booksList = document.querySelector('.books-list');
   console.log(booksList);
+
+  const filtersForm = document.querySelector('.filters');
+  console.log('filtersForm: ', filtersForm);
   
   const favoriteBooks = [];
+
+  const filters = [];
+
 
   function renderBooks() {
     console.log(dataSource.books);
 
     for (let book of dataSource.books) {
+
+      book.ratingBgc = determineRatingBgc(book.rating);
+      book.ratingWidth = book.rating * 10;
+
       const generatedHTML = template.book(book);
       console.log(generatedHTML);
 
@@ -25,6 +35,9 @@
 
       bookContainer.appendChild(element);
     } 
+
+    determineRatingBgc();
+
   }
 
   function initActions() {
@@ -60,11 +73,33 @@
         clickedBook.classList.remove('favorite');
 
         console.log(favoriteBooks);
-        
+
       }
 
     });
 
+    filtersForm.addEventListener('click', function(event){
+
+      console.log('event.target: ', event.target);
+
+      if(event.target.tagName == 'INPUT' && event.target.type == 'checkbox' && event.target.name == 'filter'){
+        
+        console.log(event.target.value); 
+        
+        if(event.target.checked){
+
+          filters.push(event.target.value);
+
+        } else if(!event.target.checked){ 
+
+          filters.splice((filters.indexOf(event.target.value)), 1);
+
+        }
+      }
+
+      filterBooks();
+
+    });
     /* for (let singleBook of bookImgs) {
 
       const bookId = singleBook.getAttribute('data-id');
@@ -93,6 +128,49 @@
         }
 
       }); */
+  }
+
+  function filterBooks() {
+
+    for (let book of dataSource.books) {
+      console.log(book);
+
+      let hideBook = false;
+
+      for(let filter of filters){ 
+
+        if(!book.details[filter]){
+
+          hideBook = true;
+          
+          break;
+        }
+      }
+
+      const filteredBooks = document.querySelector('.book__image[data-id="' + book.id + '"]'); 
+
+      if(hideBook){
+
+        filteredBooks.classList.add('hidden');
+
+      } else if(!hideBook){
+
+        filteredBooks.classList.remove('hidden');
+
+      }
+    }
+  }
+
+  function determineRatingBgc(rating) {
+    if (rating < 6) {
+      return 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
+    } else if (rating > 6 && rating <= 8) {
+      return 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
+    } else if (rating > 8 && rating <= 9) {
+      return 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+    } else if (rating > 9) {
+      return 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+    }
   }
 
   renderBooks();
